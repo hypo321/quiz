@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whimsical April 2022 Quiz</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+    <style>
+        /* Balanced base text style */
+        html, body { height: 100%; margin: 0; }
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: justify;
+            text-wrap: balance;
+            overflow: hidden;
+            padding: 2rem;
+            font-family: 'Plus Jakarta', sans-serif;
+        }
+        /* Keep headings centred */
+        h1 { text-align: center; font-family: 'Cosmica Bold', sans-serif; }
+        .fade-in { animation: fadeIn 1s; }
+        .fade-in-2 { animation: fadeIn 1s; animation-delay: 2s; animation-fill-mode: both; }
+        .fade-in-3 { animation: fadeIn 1s; animation-delay: 3s; animation-fill-mode: both; }
+        .correct-answer { background: #10B981; color: white; font-weight: bold; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .final-screen { font-size: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
+        @font-face {
+            font-family: 'Cosmica Bold';
+            src: url('Cosmica-Bold.woff2') format('woff2');
+            font-weight: bold;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Plus Jakarta';
+            src: url('PlusJakartaSans-VariableFont_wght.woff2') format('woff2');
+            font-weight: 100 900;
+            font-style: normal;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-100 to-purple-200">
+
+<canvas id="confetti-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;"></canvas>
+<div class="w-full h-full flex items-center justify-center p-4 ">
+    <div id="quiz-card" class="bg-white shadow-lg rounded-3xl p-8 text-center w-full max-w-4xl h-full flex flex-col">
+        <h1 class="text-3xl font-bold mb-4">Whimsical Wonders of April 2022 Quiz</h1>
+        <div id="content" class="flex-grow overflow-auto text-xl p-2"><img src="quiz.png" alt="Quiz Intro" class="fade-in mx-auto mb-4 h-auto" /></div>
+    </div>
+</div>
+
+<script>
+(() => {
+    // Initialize confetti
+    const confettiCanvas = document.getElementById('confetti-canvas');
+    const confettiInstance = confetti.create(confettiCanvas, { resize: true });
+
+    // Quiz data
+    const questions = [
+    {
+      "question": "Which unusual item do contestants race with on their backs in an annual championship held every Easter Monday in Yorkshire?",
+      "options": [
+        "Sacks of coal",
+        "Bales of hay",
+        "Wooden barrels",
+        "Wheels of cheese"
+      ],
+      "answer": 0,
+      "detail": "Every Easter Monday, the village of Gawthorpe in West Yorkshire hosts the World Coal Carrying Championship, where runners **race while carrying heavy sacks of coal**. In 2022 over 140 competitors took part, with men hauling 50kg sacks and women 20kg sacks over a 1.1km course. The quirky tradition began in 1963 and attracts hundreds of spectators each year!",
+      "photo": "https://www.yorkshireeveningpost.co.uk/webimg/QVNIMTI1MzgxNzg3.jpg"
+    },
+    {
+      "question": "In April 2022, villagers from Hallaton and Medbourne in Leicestershire revived which wild Easter Monday tradition?",
+      "options": [
+"Egg rolling race",
+        "Cheese chasing competition",
+        "Bottle kicking contest",
+        "Mud pit tug-of-war"
+      ],
+      "answer": 2,
+      "detail": "The centuries-old **Hallaton Bottle Kicking** tradition returned on Easter Monday 2022 after a pandemic pause. Thousands gathered as teams from Hallaton and Medbourne **scrummed and wrestled over three small beer kegs** (called 'bottles'), trying to push them to their village’s stream. It’s a no-holds-barred contest dating back over 200 years – muddy, chaotic and great fun!",
+      "photo": "https://nub.news/api/image/323158/article.jpeg"
+    },
+    {
+      "question": "Where did five adventurous sheep end up in West Yorkshire, prompting a puzzled fire brigade rescue in April 2022?",
+      "options": [
+        "Inside a supermarket",
+        "In a neighbour’s car",
+        "At the village pub",
+        "On a house rooftop"
+      ],
+      "answer": 3,
+      "detail": "Firefighters in West Yorkshire responded to a truly baa-zarre callout when five sheep **leapt onto a house roof** and got stuck there. Rescuers joked about the \"baaa-rmy\" behaviour as they built a makeshift bridge to guide the woolly wanderers back down safely&#8203;:contentReference[oaicite:5]{index=5}. All five sheep were returned to their field unharmed – not quite the \"night on the tiles\" they’d hoped for!",
+      "photo": "https://live-production.wcms.abc-cdn.net.au/d40fb7ba673ef8622dab08cc7a011247?impolicy=wcms_crop_resize&cropH=1152&cropW=2048&xPos=0&yPos=192&width=862&height=485"
+    },
+    {
+      "question": "Which animal had to be hoisted out of a family’s swimming pool by firefighters in Devon after going for an unintended late-night swim in April 2022?",
+      "options": [
+        "A young bull",
+        "A full-grown seal",
+        "A lost dolphin",
+        "A baby elephant"
+      ],
+      "answer": 0,
+      "detail": "Homeowners in Devon were stunned to find a **600kg bullock splashing in their backyard swimming pool** on a late March night. Fire crews pumped out water and the bull even \"**blew bubbles**\" and swam around inquisitively. Using slings and a telehandler, the team carefully hoisted the chilled bull out and into a trailer. Happily, the bull was cold but safe – a truly udderly unbelievable rescue!",
+      "photo": "https://s3.eu-west-2.amazonaws.com/cdn.agriland.co.uk/uploads/2022/04/bullock-swimming-pool.jpg"
+    },
+    {
+      "question": "To mark the 125th anniversary of Dracula’s publication, Whitby Abbey invited people in April 2022 to dress up and help break what kind of world record?",
+      "options": [
+        "Largest gathering of vampires",
+        "Longest vampire fangs ever made",
+        "Biggest garlic garland display",
+        "Most people singing \"Thriller\" in costume"
+      ],
+      "answer": 0,
+      "detail": "English Heritage appealed for **1,897 \"vampires\" to gather at Whitby Abbey** – the inspiration for Dracula – aiming to set a world record on the novel’s 125th anniversary. They hoped to surpass the previous mark of 1,039 people. Locals and visitors were thrilled at the prospect of capes and fangs galore in the Abbey’s ruins. (And indeed, the following month Whitby’s vampire gathering achieved a fang-tastic 1,369 participants, breaking the record!)",
+      "photo": "https://i.guim.co.uk/img/media/d4ecca7a77ced6e96f22448b7a9cd1674e250a45/0_546_8192_4918/master/8192.jpg?width=1900&quality=45&auto=format&fit=max&dpr=2&s=24a97f1360cba33418ea30ac40712e66"
+    },
+      {
+        "question": "During Greece’s Orthodox Easter in April 2022, the island of Corfu continued its famous ‘botides’ tradition. What does this explosively fun custom involve?",
+        "options": [
+          "Launching fireworks from a cathedral roof at midnight",
+          "Dressing up goats in costumes for a parade",
+          "Rolling giant painted eggs down a hill into the sea",
+          "Throwing large clay pots from balconies to smash on the street"
+        ],
+        "answer": 3,
+        "detail": "On Holy Saturday in Corfu’s old town, locals and visitors packed the streets for the **botídες** tradition – **hurling huge clay pots off balconies so they shatter loudly below**. The jars (tied with red ribbons and often filled with water) crash to ringing bells and cheering crowds. This spectacular custom, unique to Corfu, symbolizes driving out misfortune and celebrating new life at Easter. It’s literally a smash-hit event every year!",
+        "photo": "https://in-cyprus.philenews.com/wp-content/uploads/2025/04/kerkira-stamnes.webp"
+      } ,
+    {
+      "question": "Keepers at Chester Zoo were overjoyed in April 2022 by the birth of a tiny cotton-top tamarin. Why was this baby monkey’s arrival so special?",
+      "options": [
+        "It learned sign language at 2 days old",
+        "It had unique bright blue fur",
+        "It was one of the world’s most endangered primates",
+        "It was born on the zoo’s 90th anniversary"
+      ],
+      "answer": 2,
+      "detail": "Chester Zoo celebrated the arrival of a **critically endangered cotton-top tamarin** – the first born there in 22 years. Weighing just 40g at birth and about 10cm long, the tiny infant is one of only ~2,000 of these primates left in the wild. Proud parents Treat and Leo have \"taken to parenthood\" wonderfully. The zoo’s experts were *“overjoyed”* at this hopeful boost for the species’ future.",
+      "photo": "https://people.com/thmb/vkSZvgZsujh1zT8dYwDHSexWKTU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():focal(449x0:451x2):format(webp)/cotton-top-tamarin-monkey-3-6bf2f307f692456380c404e19a0d045e.jpg"
+    }
+  ]
+;
+
+    const totalSteps = questions.length * 3;
+    let step = -1;
+    const content = document.getElementById('content');
+
+    function renderStep() {
+        if (step < 0) {
+            // show intro image before first question
+            content.innerHTML = `<img src="quiz.png" alt="Quiz Intro" class="fade-in mx-auto mb-4 h-auto" />`;
+            return;
+        }
+        if (step >= totalSteps) {
+            content.innerHTML = `<div class='final-screen'>🥇 Congratulations! You all win! 🥇</div>`;
+            confettiInstance({ particleCount: 200, spread: 70 });
+            return;
+        }
+        const qIndex = Math.floor(step / 3);
+        const subStep = step % 3;
+        const q = questions[qIndex];
+        // Question
+        content.innerHTML = `<div><strong>Q${qIndex + 1}: ${q.question}</strong></div>`;
+        // Options
+        if (subStep >= 1) {
+            const optsHtml = q.options.map((opt, i) =>
+                `<div id="option-${i}" class="bg-purple-100 rounded-md text-left px-2 py-1 mb-1">${String.fromCharCode(65 + i)}) ${opt}</div>`
+            ).join('');
+            content.innerHTML += `<div class='fade-in mt-4 w-4/5 mx-auto'>${optsHtml}</div>`;
+        }
+        // Answer & detail
+        if (subStep >= 2) {
+            document.getElementById(`option-${q.answer}`).classList.add('correct-answer');
+            content.innerHTML += `<img src="${q.photo}" alt="Question image" class="fade-in-2 mt-4 mx-auto max-w-full max-h-80" />`;
+            // convert markdown **bold** to <strong> tags
+            const detailHtml = q.detail.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            content.innerHTML += `<div class='fade-in-3 mt-4 text-sm italic'>${detailHtml}</div>`;
+        }
+    }
+
+    document.onkeydown = (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+            step++;
+            renderStep();
+        } else if (e.key === 'ArrowLeft') {
+            if (step > -1) {
+                step--;
+                renderStep();
+            }
+        }
+    };
+})();
+</script>
+
+</body>
+</html>
